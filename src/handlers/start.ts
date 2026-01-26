@@ -28,7 +28,7 @@ Stay tuned for more! 🎈💕
       Markup.button.callback('📤 Share a Picture', 'share_picture'),
     ],
     [
-      Markup.button.url('🌐 Visit our Wedding Website', 'https://abelaandhanichwedding.vercel.app'),
+      Markup.button.url('🌐 Visit our Wedding Website', 'https://themewagon.github.io/Nupital'),
     ],
   ]);
 
@@ -43,21 +43,43 @@ Stay tuned for more! 🎈💕
       // Ignore if already answered or invalid
     });
 
-    if (hasWelcomeImage) {
-      await ctx.editMessageMedia(
-        {
-          type: 'photo',
-          media: { source: imagePath },
-          caption: welcomeMessage,
+    try {
+      if (hasWelcomeImage) {
+        await ctx.editMessageMedia(
+          {
+            type: 'photo',
+            media: { source: imagePath },
+            caption: welcomeMessage,
+            parse_mode: 'Markdown',
+          },
+          keyboard
+        );
+      } else {
+        await ctx.editMessageText(welcomeMessage, {
           parse_mode: 'Markdown',
-        },
-        keyboard
-      );
-    } else {
-      await ctx.editMessageText(welcomeMessage, {
-        parse_mode: 'Markdown',
-        ...keyboard,
-      });
+          ...keyboard,
+        });
+      }
+    } catch (error: any) {
+      // Ignore "message is not modified" error - happens when user clicks same button again
+      if (error.response?.error_code === 400 && 
+          error.response?.description?.includes('message is not modified')) {
+        // Message is already correct, just ignore the error
+        return;
+      }
+      // For other errors, try to send a new message
+      if (hasWelcomeImage) {
+        await ctx.replyWithPhoto(
+          { source: imagePath },
+          {
+            caption: welcomeMessage,
+            parse_mode: 'Markdown',
+            ...keyboard,
+          }
+        );
+      } else {
+        await ctx.replyWithMarkdown(welcomeMessage, keyboard);
+      }
     }
   } else {
     if (hasWelcomeImage) {
