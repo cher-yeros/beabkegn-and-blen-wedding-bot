@@ -5,6 +5,6 @@ storage/
 uploads/
 *.log
 .DS_Store
-assets/photos
+assets/photos/
 uploads
 storage/
