@@ -1,4 +1,5 @@
 import { Telegraf } from 'telegraf';
+import express, { Request, Response } from 'express';
 import { config } from './config';
 import { startHandler } from './handlers/start';
 import { detailsHandler } from './handlers/details';
@@ -55,6 +56,73 @@ function clearUserState(userId: string) {
 }
 
 loadStates();
+
+// Initialize Express app for health checks
+const app = express();
+app.use(express.json());
+
+// Health check endpoint
+app.get('/health', async (req: Request, res: Response) => {
+  const healthStatus = {
+    status: 'ok',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    checks: {
+      bot: 'unknown',
+      storage: 'unknown',
+      telegram: 'unknown',
+    },
+  };
+
+  // Check if bot is initialized
+  try {
+    if (bot) {
+      healthStatus.checks.bot = 'running';
+    }
+  } catch (error) {
+    healthStatus.checks.bot = 'error';
+    healthStatus.status = 'degraded';
+  }
+
+  // Check storage directory
+  try {
+    const storageDir = path.join(__dirname, '../storage');
+    if (fs.existsSync(storageDir)) {
+      try {
+        fs.accessSync(storageDir, fs.constants.W_OK);
+        healthStatus.checks.storage = 'writable';
+      } catch {
+        healthStatus.checks.storage = 'readonly';
+        healthStatus.status = 'degraded';
+      }
+    } else {
+      healthStatus.checks.storage = 'missing';
+      healthStatus.status = 'degraded';
+    }
+  } catch (error) {
+    healthStatus.checks.storage = 'error';
+    healthStatus.status = 'degraded';
+  }
+
+  // Check Telegram connection (optional - may fail if bot is starting)
+  try {
+    const botInfo = await bot.telegram.getMe();
+    if (botInfo) {
+      healthStatus.checks.telegram = 'connected';
+    }
+  } catch (error) {
+    healthStatus.checks.telegram = 'disconnected';
+    // Don't fail health check if Telegram is temporarily unavailable
+  }
+
+  const statusCode = healthStatus.status === 'ok' ? 200 : 503;
+  res.status(statusCode).json(healthStatus);
+});
+
+// Start Express server
+app.listen(config.port, () => {
+  console.log(`🏥 Health check server running on port ${config.port}`);
+});
 
 // Register command handlers
 bot.command('start', async (ctx) => {

@@ -47,6 +47,58 @@ jobs:
             mkdir -p tmp
             touch tmp/restart.txt
 
+      - name: Health Check
+        run: |
+          echo "Waiting for application to restart..."
+          sleep 15
+          
+          APP_URL="${{ secrets.APP_URL || 'https://abelhana.lelahub.org' }}"
+          HEALTH_ENDPOINT="${APP_URL}/health"
+          
+          echo "Checking health endpoint: ${HEALTH_ENDPOINT}"
+          
+          MAX_RETRIES=5
+          RETRY_COUNT=0
+          HEALTH_STATUS=""
+          
+          while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+            echo "Attempt $((RETRY_COUNT + 1)) of $MAX_RETRIES..."
+            
+            RESPONSE=$(curl -s -w "\n%{http_code}" "${HEALTH_ENDPOINT}" || echo "000")
+            HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+            BODY=$(echo "$RESPONSE" | sed '$d')
+            
+            if [ "$HTTP_CODE" = "200" ]; then
+              echo "✓ Health check passed!"
+              echo "Response:"
+              echo "$BODY"
+              HEALTH_STATUS="ok"
+              break
+            elif [ "$HTTP_CODE" = "503" ]; then
+              echo "⚠ Health check returned degraded status (503)"
+              echo "Response:"
+              echo "$BODY"
+              HEALTH_STATUS="degraded"
+              break
+            else
+              echo "✗ Health check failed with HTTP code: $HTTP_CODE"
+              RETRY_COUNT=$((RETRY_COUNT + 1))
+              if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
+                echo "Retrying in 5 seconds..."
+                sleep 5
+              fi
+            fi
+          done
+          
+          if [ -z "$HEALTH_STATUS" ]; then
+            echo "✗ Health check failed after $MAX_RETRIES attempts"
+            exit 1
+          fi
+          
+          if [ "$HEALTH_STATUS" = "degraded" ]; then
+            echo "⚠ Application is running but in degraded state"
+          fi
+
       # - name: Restart Node.js App
       #   uses: appleboy/ssh-action@v0.1.3
       #   with:

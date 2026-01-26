@@ -8,6 +8,7 @@ export const config = {
   weddingDate: process.env.WEDDING_DATE || '2026-08-15T14:00:00',
   venueName: process.env.VENUE_NAME || 'Wedding Venue',
   googleMapsUrl: process.env.GOOGLE_MAPS_URL || 'https://maps.google.com/',
+  port: parseInt(process.env.PORT || '3000', 10),
 };
 
 // Validate required environment variables
