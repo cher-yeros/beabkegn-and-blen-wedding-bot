@@ -3,6 +3,7 @@ dist/
 .env
 storage/
 uploads/
+logs/
 *.log
 .DS_Store
 assets/photos/

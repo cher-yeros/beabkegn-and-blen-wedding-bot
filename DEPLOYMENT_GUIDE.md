@@ -13,6 +13,7 @@ This guide covers deploying the Abela & Hanich Wedding Bot to cPanel.
 ### Step 1: Prepare Your Files
 
 1. Build the project locally:
+
    ```bash
    npm install
    npm run build
@@ -115,6 +116,7 @@ Go to your GitHub repository → **Settings** → **Secrets and variables** → 
 ### Step 3: Verify Deployment Path
 
 Check that the target directory in `.github/workflows/deploy.yml` matches your cPanel setup:
+
 ```yaml
 target: "/home/lelahukm/abelhana.lelahub.org"
 ```
@@ -157,6 +159,7 @@ target: "/home/lelahukm/abelhana.lelahub.org"
 ### Environment Variables
 
 Your `.env` file should contain:
+
 ```
 BOT_TOKEN=your_telegram_bot_token_here
 ADMIN_ID=your_telegram_user_id_here
@@ -166,10 +169,12 @@ GOOGLE_MAPS_URL=https://maps.google.com/
 ```
 
 **Required Variables:**
+
 - `BOT_TOKEN`: Your Telegram bot token (from @BotFather)
 - `ADMIN_ID`: Your Telegram user ID (numeric)
 
 **Optional Variables (have defaults):**
+
 - `WEDDING_DATE`: Wedding date in ISO format (default: 2026-08-15T14:00:00)
 - `VENUE_NAME`: Name of the wedding venue (default: "Wedding Venue")
 - `GOOGLE_MAPS_URL`: Google Maps link to the venue (default: https://maps.google.com/)
@@ -181,6 +186,7 @@ GOOGLE_MAPS_URL=https://maps.google.com/
 ### File Permissions
 
 Ensure proper permissions:
+
 ```bash
 chmod 755 /home/lelahukm/abelhana.lelahub.org
 chmod 644 /home/lelahukm/abelhana.lelahub.org/dist/index.js
@@ -189,6 +195,7 @@ chmod 644 /home/lelahukm/abelhana.lelahub.org/dist/index.js
 ### Storage Directory
 
 The bot creates a `storage/` directory for user states. Ensure it's writable:
+
 ```bash
 mkdir -p /home/lelahukm/abelhana.lelahub.org/storage
 chmod 755 /home/lelahukm/abelhana.lelahub.org/storage
@@ -196,7 +203,22 @@ chmod 755 /home/lelahukm/abelhana.lelahub.org/storage
 
 ### Logs
 
-Check application logs:
+**Application log file (on server):**
+
+- The app writes to `logs/app.log` in the project directory. To view:
+  ```bash
+  tail -f /home/lelahukm/abelhana.lelahub.org/logs/app.log
+  ```
+- Contains startup, errors, and uncaught exceptions with timestamps.
+
+**Deployment logs (GitHub Actions):**
+
+- After each deploy, go to **Actions** → select the latest run → **Summary**.
+- Download the **deployment-log-{run_number}** artifact to see which steps ran and whether the deploy succeeded or failed.
+- If the deploy succeeded, the step **Fetch server app log** shows the last 200 lines of `logs/app.log` in the run output.
+
+**Other:**
+
 - **cPanel Node.js App**: Check logs in the Node.js Selector interface
 - **PM2**: `pm2 logs wedding-bot`
 - **SSH**: Check console output in terminal
@@ -225,9 +247,11 @@ Check application logs:
 ## Updating the Application
 
 ### Manual Update:
+
 1. Build locally: `npm run build`
 2. Upload new `dist/` folder
 3. Restart the Node.js app in cPanel or run `pm2 restart wedding-bot`
 
 ### Automated Update:
+
 Just push to `main` branch - GitHub Actions handles everything!
