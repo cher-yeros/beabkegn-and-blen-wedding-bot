@@ -46,7 +46,11 @@ jobs:
           key: ${{ secrets.CPANEL_SSH_KEY }}
           passphrase: ${{ secrets.CPANEL_SSH_PASSPHRASE }}
 
-          source: "." # Source files to deploy
+          source: |
+            dist
+            package.json
+            package-lock.json
+            assets
           target: "/home/lelahukm/abelhana.lelahub.org" # Target directory on cPanel
       - name: Log progress
         if: success()
@@ -64,7 +68,8 @@ jobs:
             source /home/lelahukm/nodevenv/abelhana.lelahub.org/20/bin/activate
             cd /home/lelahukm/abelhana.lelahub.org
             npm install --production
-            pm2 restart dist/index.js # Use pm2 or the cPanel Node.js manager
+            mkdir -p tmp
+            touch tmp/restart.txt
       - name: Log progress
         if: success()
         run: 'echo "Restart: OK" >> deploy-log.txt'
