@@ -30,13 +30,13 @@ jobs:
         run: npm install
       - name: Log progress
         if: success()
-        run: echo "Install dependencies: OK" >> deploy-log.txt
+        run: 'echo "Install dependencies: OK" >> deploy-log.txt'
 
       - name: Build project (if applicable)
         run: npm run build
       - name: Log progress
         if: success()
-        run: echo "Build: OK" >> deploy-log.txt
+        run: 'echo "Build: OK" >> deploy-log.txt'
 
       - name: Deploy to cPanel via SSH
         uses: appleboy/scp-action@v0.1.3
@@ -50,7 +50,7 @@ jobs:
           target: "/home/lelahukm/abelhana.lelahub.org" # Target directory on cPanel
       - name: Log progress
         if: success()
-        run: echo "Deploy SCP: OK" >> deploy-log.txt
+        run: 'echo "Deploy SCP: OK" >> deploy-log.txt'
 
       - name: Restart Node.js App
         uses: appleboy/ssh-action@v0.1.3
@@ -67,7 +67,7 @@ jobs:
             pm2 restart dist/index.js # Use pm2 or the cPanel Node.js manager
       - name: Log progress
         if: success()
-        run: echo "Restart: OK" >> deploy-log.txt
+        run: 'echo "Restart: OK" >> deploy-log.txt'
 
       - name: Fetch server app log (if present)
         if: success()
