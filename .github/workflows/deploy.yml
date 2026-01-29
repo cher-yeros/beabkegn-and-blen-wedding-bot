@@ -44,9 +44,7 @@ jobs:
           passphrase: ${{ secrets.CPANEL_SSH_PASSPHRASE }}
 
           script: |
-            source /home/lelahukm/nodevenv/abelhana.lelahub.com/20/bin/activate
+            source /home/lelahukm/nodevenv/abelhana.lelahub.org/20/bin/activate
             cd /home/lelahukm/abelhana.lelahub.org
             npm install --production
             pm2 restart dist/index.js # Use pm2 or the cPanel Node.js manager
-
-
