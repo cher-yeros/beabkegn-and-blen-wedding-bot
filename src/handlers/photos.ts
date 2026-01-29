@@ -2,8 +2,31 @@ import { Context } from "telegraf";
 import { Markup } from "telegraf";
 import * as fs from "fs";
 import * as path from "path";
+import sharp from "sharp";
 
 const photosDir = path.join(__dirname, "../../assets/photos");
+
+/** Max dimension (px) for Telegram photos to avoid PHOTO_INVALID_DIMENSIONS. */
+const MAX_PHOTO_DIMENSION = 1280;
+
+/**
+ * Resize image to fit within Telegram's dimension limits. Returns buffer or null on failure.
+ */
+async function resizePhotoForTelegram(
+  filePath: string,
+): Promise<Buffer | null> {
+  try {
+    return await sharp(filePath)
+      .resize(MAX_PHOTO_DIMENSION, MAX_PHOTO_DIMENSION, {
+        fit: "inside",
+        withoutEnlargement: true,
+      })
+      .jpeg({ quality: 90 })
+      .toBuffer();
+  } catch {
+    return null;
+  }
+}
 
 /** Edit message text, or delete and reply if edit fails (e.g. photo message, message already gone). */
 async function editMessageTextOrReply(
@@ -73,32 +96,44 @@ export async function photosHandler(ctx: Context) {
 
     // Send photos as media group (album)
     if (imageFiles.length === 1) {
-      // Single photo
+      // Single photo (resize to avoid PHOTO_INVALID_DIMENSIONS)
       const photoPath = path.join(photosDir, imageFiles[0]);
       try {
         await ctx.deleteMessage();
       } catch (e) {
         // Ignore if message can't be deleted
       }
+      const resized = await resizePhotoForTelegram(photoPath);
+      const photoSource = resized ? { source: resized } : { source: photoPath };
       await ctx.replyWithPhoto(
-        { source: photoPath },
+        photoSource,
         Markup.inlineKeyboard([
           [Markup.button.callback("🔙 Back to Menu", "start")],
         ]),
       );
     } else {
-      // Multiple photos as media group
+      // Multiple photos as media group (resize each to avoid PHOTO_INVALID_DIMENSIONS)
       try {
         await ctx.deleteMessage();
       } catch (e) {
         // Ignore if message can't be deleted
       }
-      const media = imageFiles.slice(0, 10).map((file) => ({
-        type: "photo" as const,
-        media: { source: path.join(photosDir, file) },
-      }));
-
-      await ctx.replyWithMediaGroup(media);
+      const filesToSend = imageFiles.slice(0, 10);
+      const media: Array<{
+        type: "photo";
+        media: { source: Buffer } | { source: string };
+      }> = [];
+      for (const file of filesToSend) {
+        const filePath = path.join(photosDir, file);
+        const resized = await resizePhotoForTelegram(filePath);
+        media.push({
+          type: "photo",
+          media: resized ? { source: resized } : { source: filePath },
+        });
+      }
+      await ctx.replyWithMediaGroup(
+        media as Parameters<Context["replyWithMediaGroup"]>[0],
+      );
       await ctx.reply(
         `📷 Here are ${imageFiles.length} photos from our wedding!`,
         Markup.inlineKeyboard([
