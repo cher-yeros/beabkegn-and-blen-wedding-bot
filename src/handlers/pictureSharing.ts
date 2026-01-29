@@ -7,7 +7,7 @@ import * as https from "https";
 
 const uploadsDir = path.join(__dirname, "../../uploads");
 
-/** Edit message text, or delete and reply if the message has no text (e.g. photo with caption). */
+/** Edit message text, or delete and reply if edit fails (e.g. photo message, message already gone). */
 async function editMessageTextOrReply(
   ctx: Context,
   text: string,
@@ -18,7 +18,10 @@ async function editMessageTextOrReply(
   } catch (err: unknown) {
     const e = err as { message?: string; response?: { description?: string } };
     const description = e?.response?.description ?? e?.message ?? "";
-    if (description.includes("no text in the message to edit")) {
+    const cannotEdit =
+      description.includes("no text in the message to edit") ||
+      description.includes("message to edit not found");
+    if (cannotEdit) {
       try {
         await ctx.deleteMessage();
       } catch {
