@@ -142,6 +142,7 @@ bot.action("start", async (ctx) => {
 bot.action("wedding_details", detailsHandler);
 bot.action("countdown", countdownHandler);
 bot.action("photos", photosHandler);
+bot.action(/^photos_page:\d+$/, photosHandler);
 bot.action("remind_me", async (ctx) => {
   await remindersHandler(ctx, setUserState);
 });
