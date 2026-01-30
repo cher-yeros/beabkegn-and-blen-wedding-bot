@@ -11,17 +11,17 @@ export const config = {
   port: parseInt(process.env.PORT || "3000", 10),
 };
 
-// Validate required environment variables
-if (!config.botToken) {
-  throw new Error("BOT_TOKEN is required in .env file");
-}
-
-if (!process.env.ADMIN_ID) {
-  throw new Error("ADMIN_ID is required in .env file");
-}
-
-if (isNaN(config.adminId) || config.adminId === 0) {
-  throw new Error(
-    `ADMIN_ID must be a valid non-zero number. Current value: "${process.env.ADMIN_ID}"`,
-  );
+/** Call before starting the bot; throws if BOT_TOKEN or ADMIN_ID are missing/invalid. */
+export function validateBotConfig(): void {
+  if (!config.botToken) {
+    throw new Error("BOT_TOKEN is required in .env file");
+  }
+  if (!process.env.ADMIN_ID) {
+    throw new Error("ADMIN_ID is required in .env file");
+  }
+  if (isNaN(config.adminId) || config.adminId === 0) {
+    throw new Error(
+      `ADMIN_ID must be a valid non-zero number. Current value: "${process.env.ADMIN_ID}"`,
+    );
+  }
 }

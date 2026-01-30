@@ -1,6 +1,6 @@
 import { Telegraf } from "telegraf";
 import express, { Request, Response } from "express";
-import { config } from "./config";
+import { config, validateBotConfig } from "./config";
 import { logger } from "./logger";
 import { startHandler } from "./handlers/start";
 import { detailsHandler } from "./handlers/details";
@@ -12,87 +12,27 @@ import { pictureSharingHandler } from "./handlers/pictureSharing";
 import * as fs from "fs";
 import * as path from "path";
 
-const bot = new Telegraf(config.botToken);
-
-// Simple session state management
-const userStates: Record<string, string> = {};
-const stateFile = path.join(__dirname, "../storage/userStates.json");
-
-// Load user states
-function loadStates() {
-  if (fs.existsSync(stateFile)) {
-    try {
-      const data = fs.readFileSync(stateFile, "utf-8");
-      Object.assign(userStates, JSON.parse(data));
-    } catch (error) {
-      logger.error("Error loading user states", { error: String(error) });
-    }
-  }
-}
-
-// Save user states
-function saveStates() {
-  const storageDir = path.join(__dirname, "../storage");
-  if (!fs.existsSync(storageDir)) {
-    fs.mkdirSync(storageDir, { recursive: true });
-  }
-  fs.writeFileSync(stateFile, JSON.stringify(userStates, null, 2));
-}
-
-// Set user state
-function setUserState(userId: string, state: string) {
-  userStates[userId] = state;
-  saveStates();
-}
-
-// Get user state
-function getUserState(userId: string): string | undefined {
-  return userStates[userId];
-}
-
-// Clear user state
-function clearUserState(userId: string) {
-  delete userStates[userId];
-  saveStates();
-}
-
-loadStates();
-
-// Initialize Express app for health checks
+// --- Start HTTP server first so /health and / always respond ---
 const app = express();
 app.use(express.json());
 
-// Serve images from assets/photos (e.g. GET /photos/wedding.jpg)
 const photosAssetsPath = path.join(__dirname, "../assets/photos");
 if (!fs.existsSync(photosAssetsPath)) {
   fs.mkdirSync(photosAssetsPath, { recursive: true });
 }
 app.use("/photos", express.static(photosAssetsPath));
 
-// Health check endpoint
-app.get("/health", async (req: Request, res: Response) => {
+app.get("/", (_req: Request, res: Response) => {
+  res.status(200).json({ ok: true, message: "Wedding Bot API" });
+});
+
+app.get("/health", (_req: Request, res: Response) => {
   const healthStatus = {
     status: "ok",
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
-    checks: {
-      bot: "unknown",
-      storage: "unknown",
-      telegram: "unknown",
-    },
+    checks: { bot: "running", storage: "unknown", telegram: "unknown" },
   };
-
-  // Check if bot is initialized
-  try {
-    if (bot) {
-      healthStatus.checks.bot = "running";
-    }
-  } catch (error) {
-    healthStatus.checks.bot = "error";
-    healthStatus.status = "degraded";
-  }
-
-  // Check storage directory
   try {
     const storageDir = path.join(__dirname, "../storage");
     if (fs.existsSync(storageDir)) {
@@ -107,30 +47,58 @@ app.get("/health", async (req: Request, res: Response) => {
       healthStatus.checks.storage = "missing";
       healthStatus.status = "degraded";
     }
-  } catch (error) {
+  } catch {
     healthStatus.checks.storage = "error";
     healthStatus.status = "degraded";
   }
-
-  // Check Telegram connection (optional - may fail if bot is starting)
-  try {
-    const botInfo = await bot.telegram.getMe();
-    if (botInfo) {
-      healthStatus.checks.telegram = "connected";
-    }
-  } catch (error) {
-    healthStatus.checks.telegram = "disconnected";
-    // Don't fail health check if Telegram is temporarily unavailable
-  }
-
   const statusCode = healthStatus.status === "ok" ? 200 : 503;
   res.status(statusCode).json(healthStatus);
 });
 
-// Start Express server
-app.listen(config.port, () => {
-  logger.info(`Health check server running on port ${config.port}`);
+app.listen(config.port, "0.0.0.0", () => {
+  logger.info(`Health check server running on http://0.0.0.0:${config.port}`);
 });
+// --- End HTTP server (now listening before bot runs) ---
+
+const bot = new Telegraf(config.botToken);
+
+const userStates: Record<string, string> = {};
+const stateFile = path.join(__dirname, "../storage/userStates.json");
+
+function loadStates() {
+  if (fs.existsSync(stateFile)) {
+    try {
+      const data = fs.readFileSync(stateFile, "utf-8");
+      Object.assign(userStates, JSON.parse(data));
+    } catch (error) {
+      logger.error("Error loading user states", { error: String(error) });
+    }
+  }
+}
+
+function saveStates() {
+  const storageDir = path.join(__dirname, "../storage");
+  if (!fs.existsSync(storageDir)) {
+    fs.mkdirSync(storageDir, { recursive: true });
+  }
+  fs.writeFileSync(stateFile, JSON.stringify(userStates, null, 2));
+}
+
+function setUserState(userId: string, state: string) {
+  userStates[userId] = state;
+  saveStates();
+}
+
+function getUserState(userId: string): string | undefined {
+  return userStates[userId];
+}
+
+function clearUserState(userId: string) {
+  delete userStates[userId];
+  saveStates();
+}
+
+loadStates();
 
 // Register command handlers
 bot.command("start", async (ctx) => {
@@ -206,19 +174,23 @@ process.on("unhandledRejection", (reason, promise) => {
   logger.error("Unhandled rejection", { reason: String(reason) });
 });
 
-// Start bot
-bot
-  .launch()
-  .then(() => {
-    logger.info("Wedding Bot is running", { logFile: logger.getLogPath() });
-  })
-  .catch((err) => {
-    logger.error("Failed to start bot", {
-      error: String(err),
-      stack: err instanceof Error ? err.stack : undefined,
+// Start bot only if config is valid; server is already up so /health works either way
+try {
+  validateBotConfig();
+  bot
+    .launch()
+    .then(() => {
+      logger.info("Wedding Bot is running", { logFile: logger.getLogPath() });
+    })
+    .catch((err) => {
+      logger.error("Failed to start bot", {
+        error: String(err),
+        stack: err instanceof Error ? err.stack : undefined,
+      });
     });
-    process.exit(1);
-  });
+} catch (err) {
+  logger.error("Bot config invalid – bot not started", { error: String(err) });
+}
 
 // Graceful shutdown
 process.once("SIGINT", () => bot.stop("SIGINT"));
