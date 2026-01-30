@@ -62,6 +62,13 @@ loadStates();
 const app = express();
 app.use(express.json());
 
+// Serve images from assets/photos (e.g. GET /photos/wedding.jpg)
+const photosAssetsPath = path.join(__dirname, "../assets/photos");
+if (!fs.existsSync(photosAssetsPath)) {
+  fs.mkdirSync(photosAssetsPath, { recursive: true });
+}
+app.use("/photos", express.static(photosAssetsPath));
+
 // Health check endpoint
 app.get("/health", async (req: Request, res: Response) => {
   const healthStatus = {
