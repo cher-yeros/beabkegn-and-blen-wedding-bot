@@ -12,9 +12,6 @@ const MAX_PHOTO_DIMENSION = 1280;
 /** Photos per page (Telegram media group max is 10). */
 const PHOTOS_PER_PAGE = 10;
 
-/**
- * Resize image to fit within Telegram's dimension limits. Returns buffer or null on failure.
- */
 async function resizePhotoForTelegram(
   filePath: string,
 ): Promise<Buffer | null> {
