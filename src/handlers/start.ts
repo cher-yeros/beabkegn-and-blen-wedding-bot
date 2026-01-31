@@ -27,9 +27,6 @@ Stay tuned for more! 🎈💕
       Markup.button.callback('💌 Message to Us', 'message_couple'),
       Markup.button.callback('📤 Share a Picture', 'share_picture'),
     ],
-    [
-      Markup.button.url('🌐 Visit our Wedding Website', 'https://themewagon.github.io/Nupital'),
-    ],
   ]);
 
   // Check if welcome image exists
