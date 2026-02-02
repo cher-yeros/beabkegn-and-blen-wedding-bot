@@ -223,6 +223,18 @@ chmod 755 /home/lelahukm/abelhana.lelahub.org/storage
 - **PM2**: `pm2 logs wedding-bot`
 - **SSH**: Check console output in terminal
 
+### Building on the server
+
+If you run `npm run build` on the server (instead of building locally), install **all** dependencies first so TypeScript is available:
+
+```bash
+npm install          # full install (includes devDependencies)
+npm run build        # compiles TypeScript to dist/
+npm prune --production   # optional: remove devDependencies after build
+```
+
+Do **not** run `npm install --production` before building, or `tsc` will not be found.
+
 ### Troubleshooting
 
 1. **Application won't start**:
