@@ -46,7 +46,9 @@ Discover all wedding details, get key updates, and join the joy! ⏰🎉
 
 Stay tuned for more! 🎈💕
   `;
+    const WEDDING_WEBSITE_URL = 'https://abel-and-hana-wedding-site.vercel.app/';
     const keyboard = telegraf_1.Markup.inlineKeyboard([
+        [telegraf_1.Markup.button.url('🌐 Visit our wedding website', WEDDING_WEBSITE_URL)],
         [
             telegraf_1.Markup.button.callback('📍 Time & Place', 'wedding_details'),
             telegraf_1.Markup.button.callback('⏳ Countdown', 'countdown'),

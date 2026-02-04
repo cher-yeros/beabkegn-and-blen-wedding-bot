@@ -43,6 +43,5 @@ jobs:
           key: ${{ secrets.CPANEL_SSH_KEY }}
           passphrase: ${{ secrets.CPANEL_SSH_PASSPHRASE }}
           script: |
-            source /home/lelahukm/nodevenv/backend/20/bin/activate
             cd /home/lelahukm/abelhana.lelahub.org
-            pm2 restart index
+            npx pm2 restart index
