@@ -35,7 +35,7 @@ jobs:
           source: "." # Source files to deploy
           target: "/home/lelahukm/abelhana.lelahub.org" # Target directory on cPanel
 
-      - name: Restart Node.js App (Passenger)
+      - name: Restart Node.js App (PM2)
         uses: appleboy/ssh-action@v0.1.3
         with:
           host: ${{ secrets.CPANEL_HOST }}
@@ -44,5 +44,4 @@ jobs:
           passphrase: ${{ secrets.CPANEL_SSH_PASSPHRASE }}
           script: |
             cd /home/lelahukm/abelhana.lelahub.org
-            mkdir -p tmp
-            touch tmp/restart.txt
+            pm2 restart index
