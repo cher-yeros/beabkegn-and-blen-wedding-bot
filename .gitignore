@@ -5,8 +5,6 @@ uploads/
 logs/
 *.log
 .DS_Store
-assets/photos/
-assets/welcome.jpg
 uploads
 storage/
 assets/
