@@ -1,0 +1,104 @@
+name: Node.js CI/CD to cPanel
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Create deployment log
+        run: |
+          echo "=== Deployment Log ===" > deploy-log.txt
+          echo "Started: $(date -Iseconds)" >> deploy-log.txt
+          echo "Branch: ${{ github.ref_name }}" >> deploy-log.txt
+          echo "Commit: ${{ github.sha }}" >> deploy-log.txt
+          echo "---" >> deploy-log.txt
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20" # Use your Node.js version
+
+      - name: Install dependencies
+        run: npm install
+      - name: Log progress
+        if: success()
+        run: 'echo "Install dependencies: OK" >> deploy-log.txt'
+
+      - name: Build project (if applicable)
+        run: npm run build
+      - name: Log progress
+        if: success()
+        run: 'echo "Build: OK" >> deploy-log.txt'
+
+      - name: Prepare deploy bundle
+        run: |
+          mkdir -p deploy-pkg
+          cp -r dist package.json package-lock.json assets deploy-pkg/
+
+      - name: Deploy to cPanel via SSH
+        uses: appleboy/scp-action@v0.1.3
+        with:
+          host: ${{ secrets.CPANEL_HOST }}
+          username: ${{ secrets.CPANEL_USERNAME }}
+          key: ${{ secrets.CPANEL_SSH_KEY }}
+          passphrase: ${{ secrets.CPANEL_SSH_PASSPHRASE }}
+          source: "deploy-pkg"
+          strip_components: 1
+          target: "/home/lelahukm/abelhana.lelahub.org"
+      - name: Log progress
+        if: success()
+        run: 'echo "Deploy SCP: OK" >> deploy-log.txt'
+
+      - name: Restart Node.js App
+        uses: appleboy/ssh-action@v0.1.3
+        with:
+          host: ${{ secrets.CPANEL_HOST }}
+          username: ${{ secrets.CPANEL_USERNAME }}
+          key: ${{ secrets.CPANEL_SSH_KEY }}
+          passphrase: ${{ secrets.CPANEL_SSH_PASSPHRASE }}
+
+          script: |
+            source /home/lelahukm/nodevenv/abelhana.lelahub.org/20/bin/activate
+            cd /home/lelahukm/abelhana.lelahub.org
+            npm install --production
+            mkdir -p tmp
+            touch tmp/restart.txt
+      - name: Log progress
+        if: success()
+        run: 'echo "Restart: OK" >> deploy-log.txt'
+
+      - name: Fetch server app log (if present)
+        if: success()
+        continue-on-error: true
+        uses: appleboy/ssh-action@v0.1.3
+        with:
+          host: ${{ secrets.CPANEL_HOST }}
+          username: ${{ secrets.CPANEL_USERNAME }}
+          key: ${{ secrets.CPANEL_SSH_KEY }}
+          passphrase: ${{ secrets.CPANEL_SSH_PASSPHRASE }}
+          script: |
+            cd /home/lelahukm/abelhana.lelahub.org || exit 0
+            if [ -f logs/app.log ]; then tail -n 200 logs/app.log; else echo "(No logs/app.log yet)"; fi
+
+      - name: Write deploy result and upload log
+        if: always()
+        run: |
+          echo "---" >> deploy-log.txt
+          echo "Deploy result: ${{ job.status }}" >> deploy-log.txt
+          echo "Finished: $(date -Iseconds)" >> deploy-log.txt
+
+      - name: Upload deployment log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: deployment-log-${{ github.run_number }}
+          path: deploy-log.txt
+          retention-days: 30

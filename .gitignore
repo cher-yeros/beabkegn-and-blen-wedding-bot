@@ -7,5 +7,7 @@ logs/
 .DS_Store
 uploads
 storage/
-assets/
+# assets/
 dist/
+photoshoot/
+photoshoot-compressed/
