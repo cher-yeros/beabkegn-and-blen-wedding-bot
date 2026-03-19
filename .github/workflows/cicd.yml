@@ -33,7 +33,7 @@ jobs:
           passphrase: ${{ secrets.CPANEL_SSH_PASSPHRASE }}
 
           source: "." # Source files to deploy
-          target: "/home/lelahukm/abelhana.lelahub.org" # Target directory on cPanel
+          target: "/home/lelahukm/abelhana.shevadigitals.com" # Target directory on cPanel
 
       - name: Restart Node.js App (PM2)
         uses: appleboy/ssh-action@v0.1.3
@@ -43,5 +43,5 @@ jobs:
           key: ${{ secrets.CPANEL_SSH_KEY }}
           passphrase: ${{ secrets.CPANEL_SSH_PASSPHRASE }}
           script: |
-            cd /home/lelahukm/abelhana.lelahub.org
+            cd /home/lelahukm/abelhana.shevadigitals.com
             npx pm2 restart index

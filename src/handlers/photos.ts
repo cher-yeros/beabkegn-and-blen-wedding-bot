@@ -13,7 +13,7 @@ const MAX_PHOTO_DIMENSION = 1280;
 const PHOTOS_PER_PAGE = 10;
 
 async function resizePhotoForTelegram(
-  filePath: string,
+  filePath: string
 ): Promise<Buffer | null> {
   try {
     return await sharp(filePath)
@@ -32,7 +32,7 @@ async function resizePhotoForTelegram(
 async function editMessageTextOrReply(
   ctx: Context,
   text: string,
-  extra: object,
+  extra: object
 ) {
   try {
     await ctx.editMessageText(text, extra);
@@ -72,7 +72,7 @@ export async function photosHandler(ctx: Context) {
         "📁 Photos folder created. Please add photos to the /assets/photos directory.",
         Markup.inlineKeyboard([
           [Markup.button.callback("🔙 Back to Menu", "start")],
-        ]),
+        ])
       );
       return;
     }
@@ -80,7 +80,7 @@ export async function photosHandler(ctx: Context) {
     // Get all image files from photos directory
     const files = fs.readdirSync(photosDir);
     const imageFiles = files.filter((file) =>
-      /\.(jpg|jpeg|png|gif|webp)$/i.test(file),
+      /\.(jpg|jpeg|png|gif|webp)$/i.test(file)
     );
 
     if (imageFiles.length === 0) {
@@ -89,7 +89,7 @@ export async function photosHandler(ctx: Context) {
         "📷 No photos available yet. Check back soon!",
         Markup.inlineKeyboard([
           [Markup.button.callback("🔙 Back to Menu", "start")],
-        ]),
+        ])
       );
       return;
     }
@@ -121,7 +121,7 @@ export async function photosHandler(ctx: Context) {
         photoSource,
         Markup.inlineKeyboard([
           [Markup.button.callback("🔙 Back to Menu", "start")],
-        ]),
+        ])
       );
       return;
     }
@@ -150,12 +150,12 @@ export async function photosHandler(ctx: Context) {
     const navButtons = [];
     if (page > 1) {
       navButtons.push(
-        Markup.button.callback("◀ Previous", `photos_page:${page - 1}`),
+        Markup.button.callback("◀ Previous", `photos_page:${page - 1}`)
       );
     }
     if (page < totalPages) {
       navButtons.push(
-        Markup.button.callback("Next ▶", `photos_page:${page + 1}`),
+        Markup.button.callback("Next ▶", `photos_page:${page + 1}`)
       );
     }
     const keyboard = Markup.inlineKeyboard([
@@ -182,7 +182,7 @@ export async function photosHandler(ctx: Context) {
       }
     }
     await ctx.replyWithMediaGroup(
-      media as Parameters<Context["replyWithMediaGroup"]>[0],
+      media as Parameters<Context["replyWithMediaGroup"]>[0]
     );
     await ctx.reply(paginationText, keyboard);
   } catch (error) {
@@ -192,7 +192,7 @@ export async function photosHandler(ctx: Context) {
       "❌ Sorry, there was an error loading the photos. Please try again later.",
       Markup.inlineKeyboard([
         [Markup.button.callback("🔙 Back to Menu", "start")],
-      ]),
+      ])
     );
   }
 }
