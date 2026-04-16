@@ -1,4 +1,4 @@
-# Abela & Hanich Wedding Bot 🤵👰
+# Beabkegn & Blen Wedding Bot 🤵👰
 
 A Telegram bot for wedding information, media sharing, reminders, and guest interaction.
 

@@ -7,14 +7,14 @@ const welcomeImagePath = path.join(__dirname, "../../assets/welcome.jpg");
 const welcomeImagePathAlt = path.join(__dirname, "../../assets/welcome.png");
 
 export async function startHandler(ctx: Context) {
-  const welcomeMessage = `*Abela & Hanich's Wedding Celebration!* 💍✨
+  const welcomeMessage = `*Beabkegn & Blen's Wedding Celebration!* 💍✨
 
 Discover all wedding details, get key updates, and join the joy! ⏰🎉
 
 Stay tuned for more! 🎈💕
   `;
 
-  const WEDDING_WEBSITE_URL = "https://abel-and-hana-wedding-site.vercel.app/";
+  const WEDDING_WEBSITE_URL = "https://beabkegn-and-blen-wedding-site.vercel.app/";
 
   const keyboard = Markup.inlineKeyboard([
     [

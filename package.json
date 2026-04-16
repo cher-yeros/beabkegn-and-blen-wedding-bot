@@ -1,7 +1,7 @@
 {
-  "name": "abela-hanich-wedding-bot",
+  "name": "beabkegn-and-blen-wedding-bot",
   "version": "1.0.0",
-  "description": "Telegram bot for Abela & Hanich Wedding",
+  "description": "Telegram bot for Beabkegn & Blen Wedding",
   "main": "dist/index.js",
   "scripts": {
     "build": "npx tsc",

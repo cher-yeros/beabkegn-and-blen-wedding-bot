@@ -1,6 +1,6 @@
 # cPanel Deployment Guide
 
-This guide covers deploying the Abela & Hanich Wedding Bot to cPanel.
+This guide covers deploying the Beabkegn & Blen Wedding Bot to cPanel.
 
 ## Prerequisites
 

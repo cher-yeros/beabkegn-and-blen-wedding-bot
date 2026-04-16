@@ -6,7 +6,7 @@
 1. BOT DESCRIPTION (for /setdescription)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Welcome to Abela & Hanich's Wedding Bot! Get wedding details, view photos, set reminders, send messages, and share your photos with us. Your one-stop guide to our special day! 💕
+Welcome to Beabkegn & Blen's Wedding Bot! Get wedding details, view photos, set reminders, send messages, and share your photos with us. Your one-stop guide to our special day! 💕
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 2. ABOUT TEXT / DESCRIPTION PICTURE (for /setabouttext)
@@ -29,7 +29,7 @@ Wedding bot: details, photos, countdown, reminders & photo sharing. Use /start! 
 3. PRIVACY POLICY (for /setprivacy) - FULL VERSION
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-PRIVACY POLICY - Abela & Hanich Wedding Bot
+PRIVACY POLICY - Beabkegn & Blen Wedding Bot
 
 Last Updated: January 2026
 
@@ -88,7 +88,7 @@ Requirements:
 - Size: 512x512 pixels (square)
 - Format: PNG or JPG
 - Max Size: 10KB
-- Design: Simple, clear, wedding-themed icon or initials "A & H"
+- Design: Simple, clear, wedding-themed icon or initials "B & B"
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 HOW TO USE:

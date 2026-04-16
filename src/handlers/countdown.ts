@@ -38,7 +38,7 @@ The big day has arrived! We can't wait to celebrate with you!
 
 *${days}* days, *${hours}* hours, *${minutes}* minutes, and *${seconds}* seconds
 
-until Abela & Hanich's wedding! 💕
+until Beabkegn & Blen's wedding! 💕
     `;
   }
 

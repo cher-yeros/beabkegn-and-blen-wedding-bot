@@ -126,7 +126,7 @@ export async function pictureSharingHandler(
 
 We'd love to see your photos! Please send us a picture.
 
-Your photo will be saved and forwarded to Abela & Hanich.
+Your photo will be saved and forwarded to Beabkegn & Blen.
     `;
 
     const keyboard = Markup.inlineKeyboard([

@@ -9,7 +9,7 @@ This document contains all the information you need to update your bot on Telegr
 **For BotFather command: `/setdescription`**
 
 ```
-Welcome to Abela & Hanich's Wedding Bot! Get wedding details, view photos, set reminders, send messages, and share your photos with us. Your one-stop guide to our special day! 💕
+Welcome to Beabkegn & Blen's Wedding Bot! Get wedding details, view photos, set reminders, send messages, and share your photos with us. Your one-stop guide to our special day! 💕
 ```
 
 ---
@@ -52,7 +52,7 @@ Wedding bot: details, photos, countdown, reminders & photo sharing. Use /start! 
 - **File Size:** Maximum 10KB (Telegram requirement)
 - **Content Suggestions:**
   - A beautiful wedding-themed icon or logo
-  - Initials "A & H" in an elegant font
+  - Initials "B & B" in an elegant font
   - A simple wedding ring or heart design
   - A minimalist wedding cake or bouquet icon
   - Your wedding colors incorporated into the design
@@ -81,7 +81,7 @@ Wedding bot: details, photos, countdown, reminders & photo sharing. Use /start! 
 ### Privacy Policy Text:
 
 ```
-PRIVACY POLICY - Abela & Hanich Wedding Bot
+PRIVACY POLICY - Beabkegn & Blen Wedding Bot
 
 Last Updated: January 2026
 
@@ -181,7 +181,7 @@ start - Start the bot and show main menu
 
 ### Bot Short Description (for search):
 ```
-Get wedding details, photos, reminders, and share your photos with Abela & Hanich!
+Get wedding details, photos, reminders, and share your photos with Beabkegn & Blen!
 ```
 
 ---

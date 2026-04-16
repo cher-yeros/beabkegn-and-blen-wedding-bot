@@ -92,7 +92,7 @@ export async function messagesHandler(
 
 We'd love to hear from you! Please send us your message below.
 
-Your message will be forwarded to Abela & Hanich.
+Your message will be forwarded to Beabkegn & Blen.
     `;
 
     const keyboard = Markup.inlineKeyboard([
