@@ -19,7 +19,7 @@ async function countdownHandler(ctx) {
     const weddingDate = (0, dayjs_1.default)(config_1.config.weddingDate);
     const now = (0, dayjs_1.default)();
     const diff = weddingDate.diff(now);
-    let countdownMessage = '';
+    let countdownMessage = "";
     if (diff <= 0) {
         countdownMessage = `
 🎉 *It's Wedding Day!* 🎉
@@ -38,18 +38,19 @@ The big day has arrived! We can't wait to celebrate with you!
 
 *${days}* days, *${hours}* hours, *${minutes}* minutes, and *${seconds}* seconds
 
-until Abela & Hanich's wedding! 💕
+until Beabkegn & Blen's wedding! 💕
     `;
     }
     const keyboard = telegraf_1.Markup.inlineKeyboard([
-        [telegraf_1.Markup.button.callback('🔙 Back to Menu', 'start')],
+        [telegraf_1.Markup.button.callback("🔙 Back to Menu", "start")],
     ]);
     try {
         // Check if the message is a callback query from a media message
-        if (ctx.callbackQuery && 'message' in ctx.callbackQuery) {
+        if (ctx.callbackQuery && "message" in ctx.callbackQuery) {
             const message = ctx.callbackQuery.message;
             // If message has photo or other media, delete it and send a new text message
-            if (message && ('photo' in message || 'video' in message || 'document' in message)) {
+            if (message &&
+                ("photo" in message || "video" in message || "document" in message)) {
                 try {
                     await ctx.deleteMessage();
                 }
@@ -57,7 +58,7 @@ until Abela & Hanich's wedding! 💕
                     // Ignore if message can't be deleted
                 }
                 await ctx.reply(countdownMessage, {
-                    parse_mode: 'Markdown',
+                    parse_mode: "Markdown",
                     ...keyboard,
                 });
                 return;
@@ -65,15 +66,16 @@ until Abela & Hanich's wedding! 💕
         }
         // Try to edit as text message
         await ctx.editMessageText(countdownMessage, {
-            parse_mode: 'Markdown',
+            parse_mode: "Markdown",
             ...keyboard,
         });
     }
     catch (error) {
         // If editing fails (e.g., message doesn't have text), send a new message
-        if (error.response?.error_code === 400 && error.response?.description?.includes('no text')) {
+        if (error.response?.error_code === 400 &&
+            error.response?.description?.includes("no text")) {
             await ctx.reply(countdownMessage, {
-                parse_mode: 'Markdown',
+                parse_mode: "Markdown",
                 ...keyboard,
             });
         }

@@ -114,7 +114,7 @@ async function messagesHandler(ctx, setUserState, getUserState) {
 
 We'd love to hear from you! Please send us your message below.
 
-Your message will be forwarded to Abela & Hanich.
+Your message will be forwarded to Beabkegn & Blen.
     `;
         const keyboard = telegraf_1.Markup.inlineKeyboard([
             [telegraf_1.Markup.button.callback("🔙 Cancel", "start")],
