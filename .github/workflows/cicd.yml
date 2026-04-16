@@ -25,23 +25,31 @@ jobs:
         run: npm run build
 
       - name: Deploy to cPanel via SSH
-        uses: appleboy/scp-action@v0.1.3
+        uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.CPANEL_HOST }}
           username: ${{ secrets.CPANEL_USERNAME }}
           key: ${{ secrets.CPANEL_SSH_KEY }}
           passphrase: ${{ secrets.CPANEL_SSH_PASSPHRASE }}
+          port: ${{ secrets.CPANEL_PORT }}
+          timeout: 120s
+          command_timeout: 10m
+          debug: true
 
           source: "." # Source files to deploy
           target: "/home/shevadxp/beabkegnblen.shevadigitals.com" # Target directory on cPanel
 
       - name: Restart Node.js App (PM2)
-        uses: appleboy/ssh-action@v0.1.3
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.CPANEL_HOST }}
           username: ${{ secrets.CPANEL_USERNAME }}
           key: ${{ secrets.CPANEL_SSH_KEY }}
           passphrase: ${{ secrets.CPANEL_SSH_PASSPHRASE }}
+          port: ${{ secrets.CPANEL_PORT }}
+          timeout: 120s
+          command_timeout: 10m
+          debug: true
           script: |
             cd /home/shevadxp/beabkegnblen.shevadigitals.com
             touch tmp/restart.txt
