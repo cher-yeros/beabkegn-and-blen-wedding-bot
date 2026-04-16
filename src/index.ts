@@ -183,6 +183,18 @@ try {
       logger.info("Wedding Bot is running", { logFile: logger.getLogPath() });
     })
     .catch((err) => {
+      const error = err as { response?: { error_code?: number; description?: string } };
+      if (
+        error?.response?.error_code === 409 &&
+        error?.response?.description?.includes("terminated by other getUpdates request")
+      ) {
+        logger.error("Failed to start bot: polling conflict", {
+          hint: "Another bot instance is already running with the same token. Stop old process(es) and restart this service.",
+          error: String(err),
+          stack: err instanceof Error ? err.stack : undefined,
+        });
+        return;
+      }
       logger.error("Failed to start bot", {
         error: String(err),
         stack: err instanceof Error ? err.stack : undefined,

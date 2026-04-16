@@ -6,6 +6,14 @@ import * as path from "path";
 const welcomeImagePath = path.join(__dirname, "../../assets/welcome.jpg");
 const welcomeImagePathAlt = path.join(__dirname, "../../assets/welcome.png");
 
+function isPhotoDimensionsError(error: unknown): boolean {
+  const e = error as { response?: { error_code?: number; description?: string } };
+  return (
+    e?.response?.error_code === 400 &&
+    e?.response?.description?.includes("PHOTO_INVALID_DIMENSIONS") === true
+  );
+}
+
 export async function startHandler(ctx: Context) {
   const welcomeMessage = `*Beabkegn & Blen's Wedding Celebration!* 💍✨
 
@@ -64,6 +72,13 @@ Stay tuned for more! 🎈💕
         });
       }
     } catch (error: any) {
+      if (isPhotoDimensionsError(error)) {
+        await ctx.editMessageText(welcomeMessage, {
+          parse_mode: "Markdown",
+          ...keyboard,
+        });
+        return;
+      }
       // Ignore "message is not modified" error - happens when user clicks same button again
       if (
         error.response?.error_code === 400 &&
@@ -74,6 +89,29 @@ Stay tuned for more! 🎈💕
       }
       // For other errors, try to send a new message
       if (hasWelcomeImage) {
+        try {
+          await ctx.replyWithPhoto(
+            { source: imagePath },
+            {
+              caption: welcomeMessage,
+              parse_mode: "Markdown",
+              ...keyboard,
+            }
+          );
+        } catch (replyError) {
+          if (isPhotoDimensionsError(replyError)) {
+            await ctx.replyWithMarkdown(welcomeMessage, keyboard);
+          } else {
+            throw replyError;
+          }
+        }
+      } else {
+        await ctx.replyWithMarkdown(welcomeMessage, keyboard);
+      }
+    }
+  } else {
+    if (hasWelcomeImage) {
+      try {
         await ctx.replyWithPhoto(
           { source: imagePath },
           {
@@ -82,20 +120,13 @@ Stay tuned for more! 🎈💕
             ...keyboard,
           }
         );
-      } else {
-        await ctx.replyWithMarkdown(welcomeMessage, keyboard);
-      }
-    }
-  } else {
-    if (hasWelcomeImage) {
-      await ctx.replyWithPhoto(
-        { source: imagePath },
-        {
-          caption: welcomeMessage,
-          parse_mode: "Markdown",
-          ...keyboard,
+      } catch (error) {
+        if (isPhotoDimensionsError(error)) {
+          await ctx.replyWithMarkdown(welcomeMessage, keyboard);
+        } else {
+          throw error;
         }
-      );
+      }
     } else {
       await ctx.replyWithMarkdown(welcomeMessage, keyboard);
     }
