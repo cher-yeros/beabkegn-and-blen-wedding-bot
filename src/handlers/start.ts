@@ -7,7 +7,9 @@ const welcomeImagePath = path.join(__dirname, "../../assets/welcome.jpg");
 const welcomeImagePathAlt = path.join(__dirname, "../../assets/welcome.png");
 
 function isPhotoDimensionsError(error: unknown): boolean {
-  const e = error as { response?: { error_code?: number; description?: string } };
+  const e = error as {
+    response?: { error_code?: number; description?: string };
+  };
   return (
     e?.response?.error_code === 400 &&
     e?.response?.description?.includes("PHOTO_INVALID_DIMENSIONS") === true
@@ -22,7 +24,8 @@ Discover all wedding details, get key updates, and join the joy! ⏰🎉
 Stay tuned for more! 🎈💕
   `;
 
-  const WEDDING_WEBSITE_URL = "https://beabkegn-and-blen-wedding-site.vercel.app/";
+  const WEDDING_WEBSITE_URL =
+    "https://beabkegn-and-blen-wedding.gt.tc";
 
   const keyboard = Markup.inlineKeyboard([
     [
@@ -63,7 +66,7 @@ Stay tuned for more! 🎈💕
             caption: welcomeMessage,
             parse_mode: "Markdown",
           },
-          keyboard
+          keyboard,
         );
       } else {
         await ctx.editMessageText(welcomeMessage, {
@@ -96,7 +99,7 @@ Stay tuned for more! 🎈💕
               caption: welcomeMessage,
               parse_mode: "Markdown",
               ...keyboard,
-            }
+            },
           );
         } catch (replyError) {
           if (isPhotoDimensionsError(replyError)) {
@@ -118,7 +121,7 @@ Stay tuned for more! 🎈💕
             caption: welcomeMessage,
             parse_mode: "Markdown",
             ...keyboard,
-          }
+          },
         );
       } catch (error) {
         if (isPhotoDimensionsError(error)) {

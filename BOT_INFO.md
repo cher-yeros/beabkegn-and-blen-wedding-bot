@@ -21,21 +21,25 @@ Welcome to Beabkegn & Blen's Wedding Bot! Get wedding details, view photos, set 
 **⚠️ IMPORTANT: Must be 120 characters or less!**
 
 ### Option 1 (Recommended - 88 characters):
+
 ```
 Get wedding details, photos, countdown, reminders & share photos with us! Use /start 💕
 ```
 
 ### Option 2 (With developer info - 119 characters):
+
 ```
 🎉 Wedding bot by @nova_digital_hub | We create wedding bots & sites | nova-digitals.vercel.app 💕
 ```
 
 ### Option 2B (Alternative with features - 120 characters):
+
 ```
 🎉 Wedding details, photos & more! Dev: @nova_digital_hub | Wedding bots & sites | nova-digitals.vercel.app 💕
 ```
 
 ### Option 3 (87 characters):
+
 ```
 Wedding bot: details, photos, countdown, reminders & photo sharing. Use /start! 💕
 ```
@@ -47,6 +51,7 @@ Wedding bot: details, photos, countdown, reminders & photo sharing. Use /start! 
 **For BotFather command: `/setuserpic`**
 
 ### Recommended Specifications:
+
 - **Format:** PNG or JPG
 - **Size:** 512x512 pixels (square)
 - **File Size:** Maximum 10KB (Telegram requirement)
@@ -58,6 +63,7 @@ Wedding bot: details, photos, countdown, reminders & photo sharing. Use /start! 
   - Your wedding colors incorporated into the design
 
 ### Design Tips:
+
 - Keep it simple and recognizable at small sizes
 - Use your wedding colors if you have a theme
 - Ensure text/initials are clear and readable
@@ -65,6 +71,7 @@ Wedding bot: details, photos, countdown, reminders & photo sharing. Use /start! 
 - Consider a transparent background (PNG) for a cleaner look
 
 ### Tools to Create:
+
 - Canva (free templates available)
 - Adobe Express
 - Photopea (free online Photoshop alternative)
@@ -138,27 +145,35 @@ We collect your Telegram ID, messages, and photos you share. This data is stored
 Use these commands with [@BotFather](https://t.me/botfather):
 
 1. **Set Description:**
+
    ```
    /setdescription
    ```
+
    Then paste the Bot Description text above.
 
 2. **Set About Text:**
+
    ```
    /setabouttext
    ```
+
    Then paste the Description Picture text above.
 
 3. **Set Bot Picture:**
+
    ```
    /setuserpic
    ```
+
    Then upload your 512x512 pixel image file.
 
 4. **Set Privacy Policy:**
+
    ```
    /setprivacy
    ```
+
    Then paste the Privacy Policy text above.
 
 5. **Set Commands Menu:**
@@ -175,11 +190,13 @@ Use these commands with [@BotFather](https://t.me/botfather):
 ## 💡 Additional Bot Settings (Optional)
 
 ### Bot Commands (for menu):
+
 ```
 start - Start the bot and show main menu
 ```
 
 ### Bot Short Description (for search):
+
 ```
 Get wedding details, photos, reminders, and share your photos with Beabkegn & Blen!
 ```
@@ -189,6 +206,7 @@ Get wedding details, photos, reminders, and share your photos with Beabkegn & Bl
 ## 📞 Need Help?
 
 If you need assistance updating your bot settings:
+
 1. Open Telegram and search for [@BotFather](https://t.me/botfather)
 2. Send `/help` to see all available commands
 3. Follow the prompts for each setting you want to update

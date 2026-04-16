@@ -24,16 +24,19 @@ A Telegram bot for wedding information, media sharing, reminders, and guest inte
 1. Clone or download this repository
 
 2. Install dependencies:
+
 ```bash
 npm install
 ```
 
 3. Create a `.env` file based on `.env.example`:
+
 ```bash
 cp .env.example .env
 ```
 
 4. Edit `.env` and fill in your values:
+
 ```
 BOT_TOKEN=your_bot_token_here
 ADMIN_ID=your_telegram_user_id
@@ -57,11 +60,13 @@ GOOGLE_MAPS_URL=https://maps.google.com/...
 ## Running the Bot
 
 ### Development Mode
+
 ```bash
 npm run dev
 ```
 
 ### Production Mode
+
 ```bash
 npm run build
 npm start
